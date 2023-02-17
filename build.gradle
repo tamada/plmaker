@@ -1,0 +1,103 @@
+buildscript {
+    ext.versions = [
+        'plmaker': '0.5.0',
+        'vavr': '0.10.4',
+        'picocli': '4.7.1',
+        'gson': '2.10.1',
+    ]
+}
+
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.12.0'
+}
+
+version = "${versions.plmaker}"
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
+configurations {
+    generateConfig
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/info.picocli/picocli
+    implementation group: 'info.picocli', name: 'picocli', version: "${versions.picocli}"
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation group: 'com.google.code.gson', name: 'gson', version: "${versions.gson}"
+
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.9.2'
+
+    // https://mvnrepository.com/artifact/info.picocli/picocli-codegen
+    annotationProcessor group: 'info.picocli', name: 'picocli-codegen', version: "${versions.picocli}"
+}
+
+compileJava {
+    sourceCompatibility = 17
+    targetCompatibility = 17
+    options.compilerArgs += [
+        "-Aproject=${project.name}",
+        "-Aother.resource.patterns=resources/.*.json,resources/.*.graphql,resources/.*.properties"
+    ]
+}
+
+jacoco {
+    toolVersion = "0.8.8"
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filesMatching("**/*.properties") {
+            expand([
+                    'version': "${versions.plmaker}"
+            ])
+        }
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+}
+
+jar {
+    archiveBaseName = rootProject.name
+    archiveVersion = versions.plmaker
+    manifest {
+        attributes 'Main-Class': 'jp.cafebabe.plmaker.cli.Main',
+            'Class-Path': configurations.compileClasspath.files.collect { it.getName() }.join(' '),
+            'Implementation-Version': versions.plmaker
+    }
+}
+
+task copyFile(type: Copy) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from configurations.compileClasspath
+    into "$buildDir/libs"
+}
+
+build.finalizedBy copyFile
+
+coveralls {
+    sourceDirs = [ "src/main/java" ]
+    jacocoReportPath = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+}
+
+task printVersion() {
+    doFirst{
+        println "${versions.plmaker}"
+    }
+}

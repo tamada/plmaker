@@ -1,0 +1,54 @@
+query($name: String!, $owner: String!) {
+  repository(name: $name, owner: $owner) {
+    name,
+    owner { login },
+    description,
+    homepageUrl,
+    url,
+    createdAt,
+    lastModifiedAt: pushedAt,
+    isArchived,
+    isPrivate,
+    visibility,
+    diskUsage,
+    licenseInfo {
+      key,
+      name,
+      url,
+    },
+    primaryLanguage {
+      name,color
+    },
+    languages(first: 5) {
+      nodes {
+        name,
+        color,
+      }
+    },
+    latestRelease {
+      createdAt,
+      description,
+      isDraft,
+      name,
+      publishedAt,
+      tagName,
+      url,
+    },
+    repositoryTopics(first: 5) {
+      nodes {
+        topic {
+          name,
+        },
+        url,
+      }
+    },
+    collaborators {
+      totalCount,
+    },
+    stargazerCount,
+    forkCount,
+    watchers {
+      totalCount,
+    }
+  }
+}
