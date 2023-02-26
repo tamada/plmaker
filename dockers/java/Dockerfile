@@ -25,11 +25,11 @@ RUN adduser --disabled-login --disabled-password --no-create-home nonroot \
 COPY --from=builder /opt/minimaljre /opt/minimaljre
 ADD build/libs /opt/plmaker/libs
 
-ENV BTMEISTER_HOME=/opt/plmaker
+ENV PLMAKER_HOME=/opt/plmaker
 ENV JAVA_HOME=/opt/minimaljre
 ENV PATH=$JAVA_HOME/bin:$PATH
 ENV HOME=/app
-ENV BTMEISTER_VERSION=${VERSION}
+ENV PLMAKER_VERSION=${VERSION}
 
 WORKDIR /app
 USER nonroot

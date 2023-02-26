@@ -25,7 +25,7 @@ ARG VERSION="1.0.0"
 LABEL org.opencontainers.image.authors="Haruaki Tamada <tamada@users.noreply.github.com>" \
       org.opencontainers.image.url="https://github.com/tamada/plmaker" \
       org.opencontainers.image.documentation="Collecting products' information from GitHub." \
-      org.opencontainers.image.source="https://raw.githubusercontent.com/tamada/plmaker/blob/main/dockers/minimaljre/Dockerfile" \
+      org.opencontainers.image.source="https://raw.githubusercontent.com/tamada/plmaker/blob/main/dockers/native/Dockerfile" \
       org.opencontainers.image.version="${VERSION}"
 
 RUN    adduser -D nonroot
@@ -33,7 +33,7 @@ RUN    adduser -D nonroot
 COPY --from=base /opt/plmaker/plmaker /opt/plmaker/plmaker
 
 ENV HOME=/app
-ENV BTMEISTER_HOME=/opt/plmaker
+ENV PLMAKER_HOME=/opt/plmaker
 ENV PLMAKER_VERSION=${VERSION}
 
 WORKDIR "/app"

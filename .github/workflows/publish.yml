@@ -1,0 +1,142 @@
+name: publish
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    if: startsWith(github.head_ref, 'release/v') && github.event.pull_request.merged == true
+    outputs:
+      tag:  ${{ steps.vars.outputs.tag }}
+      upload_url:  ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Git Tag Name
+        id: vars
+        run: |
+          echo "GITHUB_HEAD_REF: $GITHUB_HEAD_REF (${GITHUB_HEAD_REF##*/v})"
+          echo "::set-output name=tag::${GITHUB_HEAD_REF##*/v}"
+      - name: Create release
+        run: 
+          gh release create v${{ steps.vars.outputs.tag }} --repo tamada/plmaker
+
+  build:
+    runs-on: ${{ matrix.os }}
+    needs: setup
+    outputs:
+      tag: ${{ needs.setup.outputs.tag }}
+      upload_url: ${{ needs.setup.outputs.upload_url }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            arch: amd64
+            artifact_name: plmaker
+            asset_name: plmaker-${{ needs.setup.outputs.tag }}_linux_amd64
+            separator: ':'
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            arch: arm64
+            artifact_name: plmaker
+            asset_name: plmaker-${{ needs.setup.outputs.tag }}_linux_arm64
+            separator: ':'
+          - os: macOS-latest
+            target: x86_64-apple-darwin
+            arch: amd64
+            artifact_name: plmaker
+            asset_name: plmaker-${{ needs.setup.outputs.tag }}_darwin_amd64
+            separator: ':'
+          - os: macOS-latest
+            target: aarch64-apple-darwin
+            arch: arm64
+            artifact_name: plmaker
+            asset_name: plmaker-${{ needs.setup.outputs.tag }}_darwin_arm64
+            separator: ':'
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            arch: amd64
+            artifact_name: plmaker.exe
+            asset_name: plmaker-${{ needs.setup.outputs.tag }}_windows_amd64
+            separator: ';'
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+      
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.20
+
+      - name: Setup GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          version: latest
+          java-version: '17'
+          component: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Native Image 
+        run: |
+          go run ci/build/main.go
+          go run ci/nativeimage/main.go \
+            --asset-name dist/${{ matrix.asset_name }}_bin.tar.gz \
+            --binary-name ${{ matrix.artifact_name }} \
+            --jar build/libs/plmaker-${{ needs.setup.outputs.tag }}.jar \
+            --classpath $(ls build/libs | xargs echo -n | tr ' ' ${{ matrix.separator }}) \
+            --reflect-config build/classes/java/main/META-INF/native-image/picocli-generated/plmaker/reflect-config.json \
+            --resource-config build/classes/java/main/META-INF/native-image/picocli-generated/plmaker/resource-config.json
+          go run ci/minimaljre/main.go \
+            --add-modules jp.cafebabe.plmaker,java.base,java.logging,java.net.http,java.sql,jdk.unsupported \
+            --launcher 'plmaker=jp.cafebabe.plmaker/jp.cafebabe.plmaker.cli.Main' \
+            --module-path build/libs \
+            --asset-name dist/${{ matrix.asset_name }}_withjre.tar.gz
+          gh release upload v${{ needs.setup.outputs.tag }} dist/${{ matrix.artifact_name }}_${{ needs.setup.outputs.tag }}_{bin,withjre}.tar.gz
+
+      - name: Build Java App
+        if: matrix.target == 'x86_64-unknown-linux-gnu'
+        run: |
+          go run ci/javaapp/main.go \
+            --asset-name dist/${{ matrix.artifact_name }}_${{ needs.setup.outputs.tag }}_java.tar.gz
+          gh release upload v${{ needs.setup.outputs.tag }} dist/${{ matrix.artifact_name }}_${{ needs.setup.outputs.tag }}_java.tar.gz
+
+  dockers:
+    runs-on: ubuntu-latest
+    needs: build
+    outputs:
+      tag: ${{ needs.build.outputs.tag }}
+      upload_url: ${{ needs.build.outputs.upload_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build container image
+        run: |
+          docker buildx build \
+            --push \
+            --platform linux/amd64,linux/arm64/v8 \
+            --tag ghcr.io/tamada/plmaker/java:latest
+            --file dockers/java/Dockerfile \
+            .
+          docker buildx build \
+            --push \
+            --platform linux/amd64,linux/arm64/v8 \
+            --tag ghcr.io/tamada/plmaker/native:latest
+            --file dockers/native/Dockerfile \
+            .
