@@ -1,10 +1,13 @@
 # plmaker
 
-[![Version](https://img.shields.io/badge/Version-v1.0.0-green)](https://github.com/tamada/plmaker/releases/tag/v1.0.0)
-[![License](https://img.shields.io/badge/License-Apache--2.0-green)](https://github.com/tamada/plmaker/blob/main/LICENSE)
 
-![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/native:1.0.0&color=green&logo=docker)
-![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/java:1.0.0&color=green&logo=docker)
+[![Coverage Status](https://coveralls.io/repos/github/tamada/plmaker/badge.svg?branch=main)](https://coveralls.io/github/tamada/plmaker?branch=main)
+
+[![Version](https://img.shields.io/badge/Version-v0.6.0-blue)](https://github.com/tamada/plmaker/releases/tag/v${VERSION)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue)](https://github.com/tamada/plmaker/blob/main/LICENSE)
+
+![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/native:0.6.0&color=green&logo=docker)
+![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/java:0.6.0&color=green&logo=docker)
 
 [![Homebrew](https://img.shields.io/badge/Homebrew-tamada/brew/plmaker-green?logo=homebrew)](https://github.com/tamada/homebrew-brew)
 
@@ -48,12 +51,12 @@ Usage: plmaker [-hV] [--overwrite] [--store=STORE_TYPE] [-t=TOKEN] PROJECTs...
 ### :whale: Docker
 
 * native image
-  * ![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/native:1.0.0&color=green&logo=docker)
+  * ![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/native:0.6.0&color=green&logo=docker)
 * Java (minimal JRE)
-  * ![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/java:1.0.0&color=green&logo=docker)
+  * ![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/java:0.6.0&color=green&logo=docker)
 
 ```shell
-docker run -it --rm -v $PWD:/app ghcr.io/tamada/plmaker/native:1.0.0 <ARGUMENTS_FOR_PLMAKER>
+docker run -it --rm -v $PWD:/app ghcr.io/tamada/plmaker/native:0.6.0 <ARGUMENTS_FOR_PLMAKER>
 ```
   
 ## :anchor: Install
@@ -67,7 +70,7 @@ docker run -it --rm -v $PWD:/app ghcr.io/tamada/plmaker/native:1.0.0 <ARGUMENTS_
 
 ### :muscle: Compiling yourself
 
-Type the following commands, then `build/libs/plmaker-0.5.0.jar` will be built.
+Type the following commands, then `build/libs/plmaker-0.6.0.jar` will be built.
 
 ```shell
  git clone https://github.com/tamada/plmaker.git
@@ -79,7 +82,7 @@ Type the following commands, then `build/libs/plmaker-0.5.0.jar` will be built.
 
 ### :scroll: License
 
-[![License](https://img.shields.io/badge/License-Apache--2.0-green)](https://github.com/tamada/plmaker/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue)](https://github.com/tamada/plmaker/blob/main/LICENSE)
 
 ### :man_office_worker: Developers :woman_office_worker:
 
