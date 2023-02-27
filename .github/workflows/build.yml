@@ -25,12 +25,12 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Build project with dagger.io
+      - name: Build project
         run: |
           ./gradlew build
         
       - name: Publish the test results
-        if: ${{ matrix.os  }} == 'ubuntu-latest' && always()
+        if: ${{ matrix.os  }} == 'ubuntu-latest'
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run:
