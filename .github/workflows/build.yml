@@ -34,5 +34,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Jacoco Report
+        run:
+          ./gradlew jacocoTestReport
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
