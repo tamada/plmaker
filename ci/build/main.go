@@ -33,6 +33,7 @@ func generateCompletion(ctx context.Context, client *dagger.Client) error {
 
 func build(ctx context.Context, client *dagger.Client) error {
 	gradle := client.Container().From("gradle:jdk17").
+		WithUser("gradle").
 		WithMountedDirectory("/home/gradle", client.Host().Directory(".")).
 		WithExec([]string{"gradle", "build"})
 	output := gradle.Directory("/home/gradle/build")

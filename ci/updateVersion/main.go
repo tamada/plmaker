@@ -16,7 +16,7 @@ func updateFile(fromFile, toFile, toVersion string) error {
 		{OldPart: "${VERSION_DH}", NewPart: strings.ReplaceAll(toVersion, "-", "--")},
 	}
 	err := ci.Sed(fromFile, toFile, replacers)
-	fmt.Printf("update %s (%s) done", fromFile, err)
+	fmt.Printf("update %s (%s) done\n", fromFile, err)
 	return err
 }
 
@@ -25,11 +25,14 @@ func doUpdate(ctx context.Context, toVersion string) error {
 		if err != nil {
 			return err
 		}
-		rel, err := filepath.Rel(".templates", path)
-		if err != nil {
-			return err
+		if info.Mode().IsRegular() {
+			rel, err := filepath.Rel(".templates", path)
+			if err != nil {
+				return err
+			}
+			return updateFile(path, rel, toVersion)
 		}
-		return updateFile(path, rel, toVersion)
+		return nil
 	})
 }
 
