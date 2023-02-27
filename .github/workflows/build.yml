@@ -7,17 +7,32 @@ on:
 
 jobs:
   build:
-    runs-on: "ubuntu-latest"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macOS-latest
+          - windows-latest
+
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
 
-      - name: Setup Go
-        uses: actions/setup-go@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
         with:
-          go-version-file: go.mod
-          cache: true
+          distribution: 'zulu'
+          java-version: '17'
 
       - name: Build project with dagger.io
         run: |
-          go run ci/build/main.go
+          ./gradlew build
+          java -cp "$(ls build/libs | xargs echo -n | tr ' ' ':')" picocli.AutoComplete -n plmaker -o plmaker_completion -f jp.cafebabe.plmaker.cli.Main
+
+      - name: Publish the test results
+        if: ${{ matrix.os  }} == 'ubuntu-latest' && always()
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run:
+          ./gradlew build coveralls

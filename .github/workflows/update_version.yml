@@ -21,12 +21,6 @@ jobs:
         with:
           ref: ${{ steps.vars.outputs.branch }}
           fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
-        
-      - name: Setup Go
-        uses: actions/setup-go@v3
-        with:
-          go-version-file: go.mod
-          cache: true
 
       - name: Initialize Git
         shell: bash
@@ -40,7 +34,7 @@ jobs:
       - name: Update Version
         shell: bash
         run: |
-          go run ci/updateVersion/main.go
+          ./.bin/update-version.sh ${{ steps.vars.outputs.tag }}
           # 同じバージョンを２回以上 push すると，２回目以降に，commit するものがないとエラーが出る．
           # エラーが出ても無視するようにする．
           git commit -a -m "update version to ${{ steps.vars.outputs.tag }}, ready to publish v${{ steps.vars.outputs.tag }}" || true

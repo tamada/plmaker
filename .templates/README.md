@@ -70,7 +70,7 @@ docker run -it --rm -v $PWD:/app ghcr.io/tamada/plmaker/native:${VERSION} <ARGUM
 
 ### :muscle: Compiling yourself
 
-Type the following commands, then `build/libs/plmaker-0.5.0.jar` will be built.
+Type the following commands, then `build/libs/plmaker-${VERSION}.jar` will be built.
 
 ```shell
  git clone https://github.com/tamada/plmaker.git
