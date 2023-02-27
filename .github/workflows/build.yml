@@ -28,8 +28,7 @@ jobs:
       - name: Build project with dagger.io
         run: |
           ./gradlew build
-          java -cp "$(ls build/libs | xargs echo -n | tr ' ' ':')" picocli.AutoComplete -n plmaker -o plmaker_completion -f jp.cafebabe.plmaker.cli.Main
-
+        
       - name: Publish the test results
         if: ${{ matrix.os  }} == 'ubuntu-latest' && always()
         env:
