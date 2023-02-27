@@ -29,7 +29,8 @@ jobs:
         run: |
           ./gradlew build
 
-  coveralls:
+  codecov:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
