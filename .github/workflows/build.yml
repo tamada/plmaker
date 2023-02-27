@@ -19,5 +19,6 @@ jobs:
 
       - name: Build project with dagger.io
         run: |
-          ls
+          ls ci
+          ls ci/build
           go run ci/build/main.go
