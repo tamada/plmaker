@@ -11,12 +11,13 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
-      
+
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
           go-version: 1.20
-      
+
       - name: Build project with dagger.io
-        run:
+        run: |
+          ls
           go run ci/build/main.go
