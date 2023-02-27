@@ -28,9 +28,9 @@ jobs:
       - name: Build project
         run: |
           ./gradlew build
-        
-      - name: Publish the test results
-        if: ${{ matrix.os  }} == 'ubuntu-latest'
+
+      - name: Send coverage to coveralls
+        if: ${{ matrix.os }} == 'ubuntu-latest'
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run:
