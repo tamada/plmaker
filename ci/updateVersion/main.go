@@ -15,7 +15,9 @@ func updateFile(fromFile, toFile, toVersion string) error {
 		{OldPart: "${VERSION}", NewPart: toVersion},
 		{OldPart: "${VERSION_DH}", NewPart: strings.ReplaceAll(toVersion, "-", "--")},
 	}
-	return ci.Sed(fromFile, toFile, replacers)
+	err := ci.Sed(fromFile, toFile, replacers)
+	fmt.Printf("update %s (%s) done", fromFile, err)
+	return err
 }
 
 func doUpdate(ctx context.Context, toVersion string) error {
@@ -36,6 +38,7 @@ func updateVersion(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	fmt.Printf("update to version %s\n", version)
 	return doUpdate(ctx, version)
 }
 

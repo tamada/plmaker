@@ -71,14 +71,17 @@ func goMain(args []string) int {
 		fmt.Printf("error: %s\n", err.Error())
 		return 1
 	}
+	fmt.Printf("build project done")
 	if err := generateCompletion(ctx, client); err != nil {
 		fmt.Printf("error: %s\n", err.Error())
 		return 2
 	}
+	fmt.Printf("generate completion file done")
 	if err := reportToCoveralls(ctx, client); err != nil {
 		fmt.Printf("error: %s\n", err.Error())
 		return 3
 	}
+	fmt.Printf("report to coveralls done")
 	return 0
 }
 
