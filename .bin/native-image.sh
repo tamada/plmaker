@@ -12,7 +12,7 @@ native-image \
     -H:Log=registerResource:5 \
     -H:ReflectionConfigurationFiles=build/classes/java/main/META-INF/native-image/picocli-generated/plmaker/reflect-config.json \
     -H:ResourceConfigurationFiles=build/classes/java/main/META-INF/native-image/picocli-generated/plmaker/resource-config.json \
-    plmaker
+    $1
 
 ## the following settings are not available, since gson uses jdk.unsupported module and 
 ## module mode does not support in use of jdk.unsupport module..

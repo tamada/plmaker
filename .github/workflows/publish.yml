@@ -9,7 +9,7 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    if: startsWith(github.head_ref, 'release/v') && github.event.pull_request.merged == true
+    if: startsWith(github.head_ref, 'releases/v') && github.event.pull_request.merged == true
     outputs:
       tag:  ${{ steps.vars.outputs.tag }}
       upload_url:  ${{ steps.create_release.outputs.upload_url }}
@@ -80,29 +80,29 @@ jobs:
           component: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Native Image 
+      - name: Build Native Image
+        shell: bash
         run: |
-          go run ci/build/main.go
-          go run ci/nativeimage/main.go \
-            --asset-name dist/${{ matrix.asset_name }}_bin.tar.gz \
-            --binary-name ${{ matrix.artifact_name }} \
-            --jar build/libs/plmaker-${{ needs.setup.outputs.tag }}.jar \
-            --classpath $(ls build/libs | xargs echo -n | tr ' ' ${{ matrix.separator }}) \
-            --reflect-config build/classes/java/main/META-INF/native-image/picocli-generated/plmaker/reflect-config.json \
-            --resource-config build/classes/java/main/META-INF/native-image/picocli-generated/plmaker/resource-config.json
-          go run ci/minimaljre/main.go \
-            --add-modules jp.cafebabe.plmaker,java.base,java.logging,java.net.http,java.sql,jdk.unsupported \
-            --launcher 'plmaker=jp.cafebabe.plmaker/jp.cafebabe.plmaker.cli.Main' \
-            --module-path build/libs \
-            --asset-name dist/${{ matrix.asset_name }}_withjre.tar.gz
-          gh release upload v${{ needs.setup.outputs.tag }} dist/${{ matrix.artifact_name }}_${{ needs.setup.outputs.tag }}_{bin,withjre}.tar.gz
+          ./gradlew build
+          mkdir -p dist/${{ matrix.asset_name }}_native
+          ./.bin/generate-completion.sh
+          ./.bin/native-image.sh dist/${{ matrix.asset_name }}_native/${{ needs.artifact_name }}
+          cp -r README.md LICENSE completions dist/${{ matrix.asset_name }}_native
+          tar cvfz dist/${{ matrix.asset_name }}_native.tar.gz -C dist ${{ matrix.asset_name }}_native
+
+          mkdir -p dist/${{ matrix.asset_name }}_withjre
+          ./.bin/build-minimaljre.sh dist/${{ matrix.asset_name }}_withjre
+          cp -r README.md LICENSE completions dist/${{ matrix.asset_name }}_withjre
+          tar cvfz dist/${{ matrix.asset_name }}_withjre.tar.gz -C dist ${{ matrix.asset_name }}_withjre
+
+          gh release upload v${{ needs.setup.outputs.tag }} dist/${{ matrix.artifact_name }}_${{ needs.setup.outputs.tag }}_{native,withjre}.tar.gz
 
       - name: Build Java App
         if: matrix.target == 'x86_64-unknown-linux-gnu'
         run: |
-          go run ci/javaapp/main.go \
-            --asset-name dist/${{ matrix.artifact_name }}_${{ needs.setup.outputs.tag }}_java.tar.gz
-          gh release upload v${{ needs.setup.outputs.tag }} dist/${{ matrix.artifact_name }}_${{ needs.setup.outputs.tag }}_java.tar.gz
+          ./.bin/build-javaapp.sh dist/plmaker-${{ needs.setup.outputs.tag }}_java
+          tar cvfz dist/plmaker-${{ needs.setup.outputs.tag }}_java.tar.gz -C dist plmaker-${{ needs.setup.outputs.tag }}_java
+          gh release upload v${{ needs.setup.outputs.tag }} dist/plmaker-${{ needs.setup.outputs.tag }}_java
 
   dockers:
     runs-on: ubuntu-latest
@@ -132,12 +132,14 @@ jobs:
           docker buildx build \
             --push \
             --platform linux/amd64,linux/arm64/v8 \
-            --tag ghcr.io/tamada/plmaker/java:latest
+            --tag ghcr.io/tamada/plmaker/java:latest \
+            --tag ghcr.io/tamada/plmaker/java:${{ needs.build.outputs.tag }} \
             --file dockers/java/Dockerfile \
             .
           docker buildx build \
             --push \
             --platform linux/amd64,linux/arm64/v8 \
-            --tag ghcr.io/tamada/plmaker/native:latest
+            --tag ghcr.io/tamada/plmaker/native:latest \
+            --tag ghcr.io/tamada/plmaker/java:${{ needs.build.outputs.tag }} \
             --file dockers/native/Dockerfile \
             .

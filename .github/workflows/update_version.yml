@@ -37,7 +37,7 @@ jobs:
       - name: Update Version
         shell: bash
         run: |
-          ./.bin/update-version.sh ${{ steps.vars.outputs.tag }}
+          ./.bin/update-version-to.sh ${{ steps.vars.outputs.tag }}
           # 同じバージョンを２回以上 push すると，２回目以降に，commit するものがないとエラーが出る．
           # エラーが出ても無視するようにする．
           git commit -a -m "update version to ${{ steps.vars.outputs.tag }}, ready to publish v${{ steps.vars.outputs.tag }}" || true
