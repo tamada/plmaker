@@ -3,11 +3,12 @@
 branchName=$(git branch --show-current)
 
 # if already created the pull request
-result=$(gh pr list --json headRefName | jq "isempty(.[] | select(.headRefName == \"${branchName}\"))")
-if [[ "$result" -eq "true" ]] ; then
+result=$(gh pr list --json headRefName | jq ".[].headRefName" | grep $branchName)
+if [[ $? == 0 ]] ; then
+    echo "already exist"
     exit
 fi
 
 message="$(git log --date=iso --first-parent --reverse --pretty=format:"* %s (%h) %cd" HEAD...main)"
 
-gh pr create --title $branchName --base main --head $branchName --body "$message"
+exec gh pr create --title $branchName --base main --head $branchName --body "$message"
