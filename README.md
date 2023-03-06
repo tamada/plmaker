@@ -3,11 +3,11 @@
 
 [![codecov](https://codecov.io/gh/tamada/plmaker/branch/main/graph/badge.svg?token=21RRMZ1U1W)](https://codecov.io/gh/tamada/plmaker)
 
-[![Version](https://img.shields.io/badge/Version-v0.6.7-blue)](https://github.com/tamada/plmaker/releases/tag/v${VERSION)
+[![Version](https://img.shields.io/badge/Version-v0.6.8-blue)](https://github.com/tamada/plmaker/releases/tag/v${VERSION)
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue)](https://github.com/tamada/plmaker/blob/main/LICENSE)
 
-![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/native:0.6.7&color=green&logo=docker)
-![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/java:0.6.7&color=green&logo=docker)
+![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/native:0.6.8&color=green&logo=docker)
+![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/java:0.6.8&color=green&logo=docker)
 
 [![Homebrew](https://img.shields.io/badge/Homebrew-tamada/brew/plmaker-green?logo=homebrew)](https://github.com/tamada/homebrew-brew)
 
@@ -51,12 +51,12 @@ Usage: plmaker [-hV] [--overwrite] [--store=STORE_TYPE] [-t=TOKEN] PROJECTs...
 ### :whale: Docker
 
 * native image
-  * ![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/native:0.6.7&color=green&logo=docker)
+  * ![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/native:0.6.8&color=green&logo=docker)
 * Java (minimal JRE)
-  * ![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/java:0.6.7&color=green&logo=docker)
+  * ![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/java:0.6.8&color=green&logo=docker)
 
 ```shell
-docker run -it --rm -v $PWD:/app ghcr.io/tamada/plmaker/native:0.6.7 <ARGUMENTS_FOR_PLMAKER>
+docker run -it --rm -v $PWD:/app ghcr.io/tamada/plmaker/native:0.6.8 <ARGUMENTS_FOR_PLMAKER>
 ```
   
 ## :anchor: Install
@@ -70,7 +70,7 @@ docker run -it --rm -v $PWD:/app ghcr.io/tamada/plmaker/native:0.6.7 <ARGUMENTS_
 
 ### :muscle: Compiling yourself
 
-Type the following commands, then `build/libs/plmaker-0.6.7.jar` will be built.
+Type the following commands, then `build/libs/plmaker-0.6.8.jar` will be built.
 
 ```shell
  git clone https://github.com/tamada/plmaker.git
