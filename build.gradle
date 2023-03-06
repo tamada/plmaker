@@ -1,6 +1,6 @@
 buildscript {
     ext.versions = [
-        'plmaker': '0.6.5',
+        'plmaker': '0.6.6',
         'vavr': '0.10.4',
         'picocli': '4.7.1',
         'gson': '2.10.1',
