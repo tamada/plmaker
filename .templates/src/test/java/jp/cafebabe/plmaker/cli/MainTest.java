@@ -18,6 +18,6 @@ public class MainTest {
 
         // black box testing
         int exitCode = cmd.execute("--version");
-        assertEquals("0.6.9", sw.toString().trim());
+        assertEquals("${VERSION}", sw.toString().trim());
     }
 }

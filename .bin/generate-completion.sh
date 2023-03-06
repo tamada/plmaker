@@ -2,8 +2,10 @@
 
 VERSION=$(gradle --quiet printVersion)
 
-java -cp build/libs/plmaker-${VERSION}.jar:build/libs/picocli-4.7.0.jar \
+mkdir -p build/completions/bash
+java -cp $(ls build/libs/* | xargs echo -n | tr ' ' ':') \
      picocli.AutoComplete  \
      -n plmaker \
+     -o build/completions/bash/plmaker \
      -w  \
      -f jp.cafebabe.plmaker.cli.Main

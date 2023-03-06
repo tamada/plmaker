@@ -1,0 +1,32 @@
+name: create_pull_request
+
+on:
+  push:
+    branches:
+      - releases/v*
+
+jobs:
+  create_pull_request:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Git Tag name
+        id: vars
+        run: |
+          echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+          echo "tag=${GITHUB_REF##**/v}" >> $GITHUB_OUTPUT
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.vars.outputs.branch }}
+          fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git branch -a
+          ./.bin/create-pull-request.sh 

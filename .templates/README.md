@@ -1,7 +1,7 @@
 # plmaker
 
 
-[![Coverage Status](https://coveralls.io/repos/github/tamada/plmaker/badge.svg?branch=main)](https://coveralls.io/github/tamada/plmaker?branch=main)
+[![codecov](https://codecov.io/gh/tamada/plmaker/branch/main/graph/badge.svg?token=21RRMZ1U1W)](https://codecov.io/gh/tamada/plmaker)
 
 [![Version](https://img.shields.io/badge/Version-v${VERSION_DH}-blue)](https://github.com/tamada/plmaker/releases/tag/v${VERSION)
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue)](https://github.com/tamada/plmaker/blob/main/LICENSE)
