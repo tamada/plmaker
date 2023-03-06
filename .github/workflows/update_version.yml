@@ -1,0 +1,49 @@
+name: update_version
+
+on:
+  push:
+    branches:
+      - releases/v*
+
+jobs:
+  version_up:
+    permissions:
+      contents: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git Tag name
+        id: vars
+        run: |
+          echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+          echo "tag=${GITHUB_REF##**/v}" >> $GITHUB_OUTPUT
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.vars.outputs.branch }}
+          fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Initialize Git
+        shell: bash
+        run: |
+          git config --global user.name  "GitHub Actions"
+          git config --global user.email "action@github.com"
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+
+      - name: Update Version
+        shell: bash
+        run: |
+          ./.bin/update-version.sh ${{ steps.vars.outputs.tag }}
+          # 同じバージョンを２回以上 push すると，２回目以降に，commit するものがないとエラーが出る．
+          # エラーが出ても無視するようにする．
+          git commit -a -m "update version to ${{ steps.vars.outputs.tag }}, ready to publish v${{ steps.vars.outputs.tag }}" || true
+
+      - name: Push branch
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.vars.outputs.branch }}

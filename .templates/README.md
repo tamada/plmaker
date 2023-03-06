@@ -1,7 +1,10 @@
 # plmaker
 
-[![Version](https://img.shields.io/badge/Version-v${VERSION_DH}-green)](https://github.com/tamada/plmaker/releases/tag/v${VERSION)
-[![License](https://img.shields.io/badge/License-Apache--2.0-green)](https://github.com/tamada/plmaker/blob/main/LICENSE)
+
+[![Coverage Status](https://coveralls.io/repos/github/tamada/plmaker/badge.svg?branch=main)](https://coveralls.io/github/tamada/plmaker?branch=main)
+
+[![Version](https://img.shields.io/badge/Version-v${VERSION_DH}-blue)](https://github.com/tamada/plmaker/releases/tag/v${VERSION)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue)](https://github.com/tamada/plmaker/blob/main/LICENSE)
 
 ![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/native:${VERSION}&color=green&logo=docker)
 ![Docker](https://img.shields.io/static/v1?label=Docker&message=ghcr.io/tamada/plmaker/java:${VERSION}&color=green&logo=docker)
@@ -67,7 +70,7 @@ docker run -it --rm -v $PWD:/app ghcr.io/tamada/plmaker/native:${VERSION} <ARGUM
 
 ### :muscle: Compiling yourself
 
-Type the following commands, then `build/libs/plmaker-0.5.0.jar` will be built.
+Type the following commands, then `build/libs/plmaker-${VERSION}.jar` will be built.
 
 ```shell
  git clone https://github.com/tamada/plmaker.git
@@ -79,7 +82,7 @@ Type the following commands, then `build/libs/plmaker-0.5.0.jar` will be built.
 
 ### :scroll: License
 
-[![License](https://img.shields.io/badge/License-Apache--2.0-green)](https://github.com/tamada/plmaker/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue)](https://github.com/tamada/plmaker/blob/main/LICENSE)
 
 ### :man_office_worker: Developers :woman_office_worker:
 
