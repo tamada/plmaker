@@ -7,6 +7,9 @@ on:
 
 jobs:
   create_pull_request:
+    permissions:
+      pull-requests: write
+
     runs-on: ubuntu-latest
     steps:
       - name: Git Tag name
