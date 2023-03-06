@@ -9,6 +9,6 @@ if [[ $? == 0 ]] ; then
     exit
 fi
 
-message="$(git log --date=iso --first-parent --reverse --pretty=format:"* %s (%h) %cd" ...main)"
+message="$(git log --date=iso --first-parent --reverse --pretty=format:"* %s (%h) %cd" ...origin/main)"
 
 exec gh pr create --title $branchName --base main --head $branchName --body "$message"
