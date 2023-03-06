@@ -82,6 +82,8 @@ jobs:
 
       - name: Build Native Image
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           ./gradlew build
           mkdir -p dist/${{ matrix.asset_name }}_native
@@ -99,6 +101,8 @@ jobs:
 
       - name: Build Java App
         if: matrix.target == 'x86_64-unknown-linux-gnu'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           ./.bin/build-javaapp.sh dist/plmaker-${{ needs.setup.outputs.tag }}_java
           tar cvfz dist/plmaker-${{ needs.setup.outputs.tag }}_java.tar.gz -C dist plmaker-${{ needs.setup.outputs.tag }}_java
