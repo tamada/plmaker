@@ -26,9 +26,9 @@ jobs:
           gh release create v${{ steps.vars.outputs.tag }} --repo tamada/plmaker
 
   build:
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: write
-    runs-on: ${{ matrix.os }}
     needs: setup
     outputs:
       tag: ${{ needs.setup.outputs.tag }}
@@ -113,10 +113,12 @@ jobs:
           gh release upload v${{ needs.setup.outputs.tag }} dist/plmaker-${{ needs.setup.outputs.tag }}_java
 
   dockers:
+    runs-on: ubuntu-latest
     permissions:
       packages: write
-    runs-on: ubuntu-latest
+
     needs: build
+
     outputs:
       tag: ${{ needs.build.outputs.tag }}
       upload_url: ${{ needs.build.outputs.upload_url }}

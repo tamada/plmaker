@@ -7,10 +7,10 @@ on:
 
 jobs:
   create_pull_request:
+    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
 
-    runs-on: ubuntu-latest
     steps:
       - name: Git Tag name
         id: vars

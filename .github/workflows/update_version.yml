@@ -7,10 +7,9 @@ on:
 
 jobs:
   version_up:
+    runs-on: ubuntu-latest
     permissions:
       contents: write
-
-    runs-on: ubuntu-latest
 
     steps:
       - name: Git Tag name
